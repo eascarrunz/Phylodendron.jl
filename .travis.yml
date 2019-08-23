@@ -1,0 +1,10 @@
+language: julia
+julia:
+  - 1.2
+  - 1.1
+  - 1.0
+
+coveralls: true
+
+after_success:
+  - julia -e 'cd(Pkg.dir("Phylodendron")); Pkg.add("Coverage"); using Coverage; Codecov.submit(Codecov.process_folder())'
