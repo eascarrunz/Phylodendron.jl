@@ -1,7 +1,7 @@
 # Phylodendron.jl
 
-[![Build Status](https://travis-ci.com/eascarrunz/Phylodendron.svg?branch=master)](https://travis-ci.com/eascarrunz/Phylodendron)
-[![Coverage Status](https://coveralls.io/repos/github/eascarrunz/Phylodendron/badge.svg?branch=master)](https://coveralls.io/github/eascarrunz/Phylodendron?branch=master)
+[![Build Status](https://travis-ci.com/eascarrunz/Phylodendron.jl.svg?branch=master)](https://travis-ci.com/eascarrunz/Phylodendron.jl)
+[![Coverage Status](https://coveralls.io/repos/github/eascarrunz/Phylodendron.jl/badge.svg?branch=master)](https://coveralls.io/github/eascarrunz/Phylodendron.jl?branch=master)
 
 ## Description
 
