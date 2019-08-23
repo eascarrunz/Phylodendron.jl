@@ -1,3 +1,9 @@
+#=
+Copyright 2019, E.A.
+
+Contains code derived from the Python module "Newick" Copyright 2003-2008 by Thomas Mailund, released under the GPL v.2
+=#
+
 struct Token
     name::Symbol
     value::Any
