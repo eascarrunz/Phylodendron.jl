@@ -9,10 +9,10 @@ The log-likelihoods were computed with CONTML v.3.697
 =#
 
 @testset "Reference likelihoods" begin
-    for i ∈ 1:size(list)[1]
+    for i ∈ 1:size(list, 1)
         ft, fdm, ref_llh_fixedv, ref_llh_optimv = list[i, :]
         dm = read_species_data("../data/generated/"*fdm, Float64);
-        k = size(dm)[2]
+        k = size(dm, 2)
         t = read_newick("../data/generated/"*ft)[1]
         t.dir = dm.dir
         map_species!(t)

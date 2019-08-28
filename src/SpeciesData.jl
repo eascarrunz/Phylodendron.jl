@@ -7,7 +7,7 @@ struct SpeciesDataMatrix{T}
         sppdir::SpeciesDirectory
         ) where T
         n = length(sppdir)
-        if n ≠ size(data)[1]
+        if n ≠ size(data, 1)
             msg = "the number of rows in the matrix should match the number of species given."
             throw(ArgumentError(msg))
         end
@@ -39,6 +39,8 @@ function SpeciesDataMatrix{T}(value::T, dir::SpeciesDirectory, k::Int) where T
 end
 
 Base.size(dm::SpeciesDataMatrix) = size(dm.data)
+
+Base.size(dm::SpeciesDataMatrix, dim::Int) = size(dm.data, dim)
 
 # getindex methods
 Base.getindex(dm::SpeciesDataMatrix, inds...) = getindex(dm.data, inds...)
@@ -136,7 +138,7 @@ end
 
 function Base.show(io::IO, dm::SpeciesDataMatrix)
     println(io, summary(dm))
-    k = size(dm)[2]
+    k = size(dm, 2)
     header = ["Species" collect(1:k)...]
     aln = [:l,fill(:r, k)...]
     pretty_table(io, [dm.dir.list dm.data], header; alignment=aln)
@@ -146,7 +148,7 @@ end
 
 function Base.show(io::IO, dm::SpeciesDataMatrix{Float64}; digits::Int=4)
     println(io, summary(dm))
-    k = size(dm)[2]
+    k = size(dm, 2)
     header = ["Species" collect(1:k)...]
     aln = [:l,fill(:r, k)...]
     pretty_table(
