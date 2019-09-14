@@ -246,7 +246,7 @@ Optimise v in a tree
 """
 function optimise_v!(t::Tree, i::Int; niter = 5)
     @assert t.models[i] isa RELBrownianTree
-    for foo in 1:niter
+    for _ in 1:niter
         trav = PreorderTraverser(t)
         old_p = next!(trav)
         while istip(old_p)
