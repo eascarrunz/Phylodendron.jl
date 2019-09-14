@@ -39,6 +39,10 @@
         @test n_neighbours(b) == 1
         @test neighbours(c) == [a, d, e]
         @test n_neighbours(c) == 3
+        @test ! issplitting(a)
+        @test ! issplitting(b)
+        @test issplitting(c)
+        @test issplitting(e)
     end
     @testset "Children" begin
         @test_throws Phylodendron.UndirectedError children(a)
@@ -131,6 +135,10 @@ end
         @test n_neighbours(b) == 1
         @test neighbours(c) == [a, d, e]
         @test n_neighbours(c) == 3
+        @test issplitting(a)
+        @test ! issplitting(b)
+        @test issplitting(c)
+        @test issplitting(e)
     end
     @testset "Children" begin
         @test children(a) == [b, c]

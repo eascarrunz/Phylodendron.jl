@@ -18,7 +18,7 @@ export
     getindex,
     in,
     add!
-    
+ 
 include("SpeciesData.jl")
 export
     SpeciesDataMatrix,
@@ -55,7 +55,8 @@ include("Node.jl")
         hasdata,
         hasspecies,
         matchlabel!,
-        subtree_size
+        subtree_size,
+        issplitting
 
 include("Tree.jl")
     export

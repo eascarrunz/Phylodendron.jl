@@ -245,3 +245,17 @@ function subtree_size(p::Node)::Int
 
     return stsize
 end
+
+"""
+    issplitting(p::Node)
+
+Return `true` if a node is non-splitting.
+"""
+function issplitting(p::Node)::Bool
+    if n_neighbours(p) < 3
+        isdirected(p) || return false
+        hasparent(p) && return false
+    end
+
+    return true
+end
