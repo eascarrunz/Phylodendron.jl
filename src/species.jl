@@ -147,7 +147,7 @@ function name!(sppdir::SpeciesDirectory, str::String, i::Int)
     return nothing
 end
 
-Base.length(sppdir) = sppdir.n
+Base.length(sppdir::SpeciesDirectory) = sppdir.n
 
 """
     getindex(sppdir::SpeciesDirectory, str::String)
