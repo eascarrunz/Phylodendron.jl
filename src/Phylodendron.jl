@@ -18,6 +18,11 @@ export
     getindex,
     in,
     add!
+
+include("Bipartition.jl")
+export
+    Bipartition, UndirectedBipartition, DirectedBipartition,
+    string, show
  
 include("SpeciesData.jl")
 export
@@ -107,6 +112,12 @@ include("traversing.jl")
         ancestry,
         node_path,
         mrca
+
+include("bipartition_methods.jl")
+    export
+        compute_bipartitions!,
+        istrivial, isinformative,
+        are_compatible, are_conflicting
 
 include("model_methods.jl")
 export patch_models

@@ -3,6 +3,7 @@ mutable struct Branch
     label::AbstractString
     extras::Dict{Symbol,Any}
     models::Vector{BranchModelPlugin}
+    bipart::Bipartition
 
     Branch() = new(NaN, "", Dict{Symbol,Any}(), BranchModelPlugin[])
 end

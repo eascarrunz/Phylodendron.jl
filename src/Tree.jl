@@ -11,6 +11,7 @@ mutable struct Tree
     extras::Dict{Symbol,Any}
     models::Vector{TreeModelPlugin}
     n_dataviews::Int
+    bipartitions::Set{Bipartition}
 
     Tree() = new()
 end
