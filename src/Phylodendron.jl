@@ -113,6 +113,9 @@ include("traversing.jl")
         node_path,
         mrca
 
+include("find.jl")
+    export findspecies
+
 include("bipartition_methods.jl")
     export
         compute_bipartitions!,

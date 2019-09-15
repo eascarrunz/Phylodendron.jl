@@ -13,6 +13,14 @@ Base.showerror(io::IO, e::MissingTreeInfo) = print(io, "this function requires i
 struct InvalidNewick <: Exception end
 Base.showerror(io::IO, e::InvalidNewick) = print(io, "the Newick string cannot is invalid or not supported.")
 
+struct MissingSpeciesDirectory <: Exception end
+Base.showerror(io::IO, e::MissingSpeciesDirectory) = print(io, "the tree is not associated to a species directory.")
+
+struct WrongTopology <: Exception
+	msg::String
+end
+Base.showerror(io::IO, e::WrongTopology) = print(io, e.msg)
+
 struct FinishedTraversalError <: Exception end
 
 struct MultipleRootsError <: Exception end

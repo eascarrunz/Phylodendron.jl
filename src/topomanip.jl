@@ -39,7 +39,7 @@ Unlink node `p` from `q` and `r`, and link `q` to `r`. Like so:
     ○——○——○  =>  ○——○  ○
     q  p  r      q  r  p
 
-If the original tree was rooted, the escinded subtree will be rerooted on `p`. When `rootsafe` is true, snipping the root will throw an exception. Otherwise, the tree will be rerooted on `q`.
+If the original tree was rooted, the escinded subtree will be rerooted on `p`. When `rootsafe` is true, snipping the root will throw an exception. Otherwise, the subtree will be rerooted on `q`.
 
 Warning: This the length of the new branch between `q` and `r` will be the sum of the lengths of the branches between `q` and `p` and between `p` and `r`, but all the other information (labels, extras, etc.) of the old branches will be lost.
 """
@@ -65,6 +65,38 @@ function snip!(p::Node, q::Node, r::Node; rootsafe::Bool=true)::Nothing
 
     return nothing
 end
+
+#=
+I decided against implementing the following function because it's becoming difficult to keep a consistent behaviour among functions that may snip out the root node, and I can't think of a statisfactory general behaviour for the cases in which the origin node may get snipped out.
+=#
+# """
+#     sniptip!(p::Node; rootsafe=true)
+
+# Unlink a tip node and collapse the node that was joining it to the rest of the tree, if it becomes non-splitting.
+
+# In some cases, the root node might become non-splitting. In `rootsafe` mode the root is never snipped out. With `rootsafe` set to false, the subtree will be rerooted and the new root node will be returned. In all other cases, returns `nothing`.
+# """
+# function sniptip!(p::Node; rootsafe::Bool=true)::Union{Node,Nothing}
+
+#     istip(p) || throw(WrongTopology("`p` must be a tip node."))
+#     pp = neighbours(p)[1]
+#     neighbours_pp = neighbours(pp)
+#     deleteat!(neighbours_pp, findfirst(x -> x == p, neighbours_pp))
+
+#     isroot = isdirected(pp) && ! hasparent(pp)
+#     docollapse = isroot && length(neighbours_pp) == 1
+#     docollapse && @warn("The root of the tree has been collapsed.")
+#     docollapse = docollapse ? true : length(neighbours_pp) ≤ 3
+    
+#     if docollapse
+#         q, r = neighbours_pp
+#         snip!(pp, q, r, rootsafe=rootsafe)
+#     end
+
+#     unlink!(pp, p)
+
+#     return nothing
+# end
 
 """
     collapse_nonsplitting!(t::Tree; skiporigin::Bool=true)

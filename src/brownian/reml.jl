@@ -1,5 +1,9 @@
 #=
-This is a striaghtforward implementation of Felsenstein's (1981) model and algorithms for indepentent continuous characters under Brownian motion.
+This is a straight-forward implementation of Felsenstein's (1981) model and algorithms for indepentent continuous characters under Brownian motion.
+=#
+
+#=
+TODO: Fuse vectorised operations throughout.
 =#
 
 const LOG2π = log(2π)
