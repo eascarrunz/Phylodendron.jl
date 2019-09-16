@@ -1,5 +1,5 @@
 @testset "Find species in a tree" begin
-	t = read_newick("data/snouters.nwk")[1]
+	t = read_newick("../data/snouters.nwk")[1]
 
 	@test_throws Phylodendron.MissingSpeciesDirectory findspecies(2, t)
 
