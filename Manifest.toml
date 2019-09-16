@@ -84,6 +84,14 @@ git-tree-sha1 = "b62b2558efb1eef1fa44e4be5ff58a515c287e38"
 uuid = "d96e819e-fc66-5662-9728-84c9c7592b0a"
 version = "0.12.0"
 
+[[Phylodendron]]
+deps = ["DataStructures", "DelimitedFiles", "PrettyTables", "Test"]
+git-tree-sha1 = "e3db9f1fd728553eb802beb7ae39ee69a816b51f"
+repo-rev = "master"
+repo-url = "repos/Phylodendron"
+uuid = "90fbc600-7998-11e9-2265-e9dde72b6338"
+version = "0.1.0"
+
 [[Pkg]]
 deps = ["Dates", "LibGit2", "Markdown", "Printf", "REPL", "Random", "SHA", "UUIDs"]
 uuid = "44cfe95a-1eb2-52ea-b672-e2afdf69b78f"

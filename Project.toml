@@ -1,10 +1,5 @@
-name = "Phylodendron"
-uuid = "90fbc600-7998-11e9-2265-e9dde72b6338"
-authors = ["E Ascarrunz <ascarrunz@mailfence.com>"]
-version = "0.1.0"
-
 [deps]
 DataStructures = "864edb3b-99cc-5e75-8d2d-829cb0a9cfe8"
 DelimitedFiles = "8bb1440f-4735-579b-a4ab-409b98df4dab"
+Phylodendron = "90fbc600-7998-11e9-2265-e9dde72b6338"
 PrettyTables = "08abe8d2-0d0c-5749-adfa-8a2ac140af0d"
-Test = "8dfed614-e22c-5e08-85e1-65c5234f0b40"
