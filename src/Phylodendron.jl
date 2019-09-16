@@ -8,6 +8,16 @@ using DelimitedFiles
 The files "exceptions.jl", "Branch.jl", "Link.jl", and "Node.jl" must be included in that exact order, as each file successively define types on which the following type definitions depend.
 =#
 include("exceptions.jl")
+    export
+        LinkingError,
+        UndefParentError,
+        UndirectedError,
+        MissingTreeInfo,
+        InvalidNewick,
+        MissingSpeciesDirectory,
+        WrongTopology,
+        FinishedTraversalError,
+        RootError
 
 include("species.jl")
 export

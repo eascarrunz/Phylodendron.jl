@@ -23,6 +23,4 @@ Base.showerror(io::IO, e::WrongTopology) = print(io, e.msg)
 
 struct FinishedTraversalError <: Exception end
 
-struct MultipleRootsError <: Exception end
-
 struct RootError <: Exception end
