@@ -1,4 +1,4 @@
-function simulate_bm(t::Tree, k::Int=1; σ²::Float64=1.0, x₀::Float64=0.0, allnodes=false)
+function simulate_bm(t::Tree, k::Int; σ²::Float64=1.0, x₀::Float64=0.0, allnodes=false)
     simulate_bm(
         t;
         σ²=fill(σ², k),
@@ -8,11 +8,11 @@ function simulate_bm(t::Tree, k::Int=1; σ²::Float64=1.0, x₀::Float64=0.0, al
 end
 
 """
-    simulate_bm(t::Tree, k::Int = 1, σ::Vector{Float64} = ones(k), x₀::Vector{Float64} = zeros(k); allnodes::Bool=false)
+    simulate_bm(t::Tree, k::Int, σ::Vector{Float64} = ones(k), x₀::Vector{Float64} = zeros(k); allnodes::Bool=false)
 
 Simulate the evolution of continuous traits under univariate Brownian motion on a phylogenetic tree.
 
-Creates a `SpeciesDataMatrix` with `k` independent traits (1 by default), with `σ²` as the vector of diffusion coeffients of the traits (all 1.0 by default), and `x₀` as the vector of trait values at the root (all 0.0 by default).
+Creates a `SpeciesDataMatrix` with `k` independent traits, with `σ²` as the vector of diffusion coeffients of the traits (all 1.0 by default), and `x₀` as the vector of trait values at the root (all 0.0 by default).
 
 If `allnodes` is set to `true`, it creates `Matrix` storing the simulated values of all the nodes in the tree. The order of the rows in that matrix corresponds to the preorder indices of the nodes of the tree.
 """
