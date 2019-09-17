@@ -13,6 +13,11 @@ function update_bipartition!(p::Node, q::Node, n::Int)
 	return nothing
 end
 
+"""
+	compute_bipartitions!(t::Tree)
+
+Compute the species bipartition vectors in all the branches of tree `t`. 
+"""
 function compute_bipartitions!(t::Tree)
 	trav = PostorderTraverser(t)
 	n = length(t.dir)
@@ -42,7 +47,7 @@ end
 """
 	istrivial(bp::Bipartition)
 
-A bipartition is trivial if it separates just one species (or none) from the rest.
+A bipartition is trivial if it separates just one species from the rest.
 """
 function istrivial(bp::Bipartition)::Bool
 	i = length(bp.v)
@@ -55,7 +60,7 @@ end
 
 A bipartition is informative if it separates at least one species from the rest.
 
-Uninformative bipartitions are not even bipartitions proper, as they don't define disjoint sets of species. Branches of subtrees without any species in their nodes have uninformative bipartitions.
+Uninformative bipartitions are not even bipartitions proper, as they don't define disjoint sets of species.
 """
 isinformative(bp::Bipartition)::Bool = sum(bp.v) > 0
 
@@ -63,8 +68,6 @@ isinformative(bp::Bipartition)::Bool = sum(bp.v) > 0
 	are_compatible(bp1::Bipartition, bp2::Bipartition)
 
 Return true if bipartitions `bp1` and `bp2` can be present in the same tree.
-
-Compatibility between bipartitions depends on whether they are directed: if an undirected bipartition is compatible with a directed bipartition, it is also compatible with the complement of that directed bipartition. A directed bipartition is never compatible with its complement. Undirected bipartitions have no complement.
 """
 function are_compatible(bp1::Bipartition, bp2::Bipartition)
 	cv1 = .! bp1.v
