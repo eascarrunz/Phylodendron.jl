@@ -41,7 +41,7 @@ Unlink node `p` from `q` and `r`, and link `q` to `r`. Like so:
 
 If the original tree was rooted, the escinded subtree will be rerooted on `p`. When `rootsafe` is true, snipping the root will throw an exception. Otherwise, the subtree will be rerooted on `q`.
 
-Warning: This the length of the new branch between `q` and `r` will be the sum of the lengths of the branches between `q` and `p` and between `p` and `r`, but all the other information (labels, extras, etc.) of the old branches will be lost.
+Warning: This the length of the new branch between `q` and `r` will be the sum of the lengths of the branches between `q` and `p` and between `p` and `r`, but all the other information (labels, etc.) of the old branches will be lost.
 """
 function snip!(p::Node, q::Node, r::Node; rootsafe::Bool=true)::Nothing
     if isdirected(p) && ! hasparent(p)

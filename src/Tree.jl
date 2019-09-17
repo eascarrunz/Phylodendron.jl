@@ -8,7 +8,6 @@ mutable struct Tree
     n_nodes::Int
     n_species::Int
     preorder::Vector{Tuple{Node,Node}}
-    extras::Dict{Symbol,Any}
     models::Vector{TreeModelPlugin}
     n_dataviews::Int
     bipartitions::Set{Bipartition}
@@ -29,7 +28,6 @@ function Tree(p::Node; fullinit::Bool=true)::Tree
     tr.origin = p
     tr.rooted = isdirected(p)
     tr.models = TreeModelPlugin[]
-    tr.extras = Dict{Symbol,Any}()
     tr.autoupdate = true
     tr.dir = nothing
     tr.n_dataviews = 0

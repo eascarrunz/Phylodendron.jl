@@ -23,15 +23,5 @@ Features implemented and **tested**:
 - Grafting and snipping subtrees
 - Finding paths between nodes
 - Mapping nodes and data matrices to sets of species
-
-Planned:
-
-- Dedicated Tree object
-- "Extra" fields in nodes, branches, and trees for storing any type of information
-- Brownian motion models for continuous data (maybe in another package)
-
-Under consideration:
-
-- Topology comparisons by bipartitions
-- Branch swapping by NNI, SPR, and TBR
-- NEXUS format support
+- Compute bipartitions induced by tree branches
+- Compute restricted likelihood of Brownian motion models

@@ -1,11 +1,10 @@
 mutable struct Branch
     length::Float64
     label::AbstractString
-    extras::Dict{Symbol,Any}
     models::Vector{BranchModelPlugin}
     bipart::Bipartition
 
-    Branch() = new(NaN, "", Dict{Symbol,Any}(), BranchModelPlugin[])
+    Branch() = new(NaN, "", BranchModelPlugin[])
 end
 
 function Branch(v::Float64)

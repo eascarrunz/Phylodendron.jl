@@ -5,7 +5,6 @@ mutable struct Node
     hasparent::Bool
     istip::Bool
     label::AbstractString
-    extras::Dict{Symbol, Any}
     dataviews::Vector{SubArray}
     models::Vector{NodeModelPlugin}
     species::Int
@@ -15,7 +14,7 @@ mutable struct Node
         links = Link[]
         sizehint!(links, 3)
 
-        return new(links, false, false, false, "", Dict{Symbol,Any}(), SubArray[], NodeModelPlugin[], 0, 0)
+        return new(links, false, false, false, "", SubArray[], NodeModelPlugin[], 0, 0)
     end
 end
 

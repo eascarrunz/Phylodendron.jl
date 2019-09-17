@@ -10,7 +10,6 @@ tr = Tree(b)
     @test tr.n_nodes == 20
     @test tr.n_species == 0
     @test tr.preorder == [(b,b),(a,b),(c,b),(d,c),(e,d),(f,e),(g,f),(h,f),(i,e),(j,i),(k,j),(l,i),(m,i),(n,c),(o,n),(p,o),(q,o),(r,n),(s,r),(t,r)]
-    @test isempty(tr.extras)
     @test isempty(tr.models)
 end
 
