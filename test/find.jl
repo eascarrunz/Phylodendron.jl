@@ -18,6 +18,10 @@
 	@test x.species == 8
 	@test x.label == "Eldenopsis"
 
+	x.species = 0
+
+	@test findspecies(8, t) == nothing
+
 	@test_throws Phylodendron.MissingEntry findspecies(12, t)
 
 	@test_throws Phylodendron.MissingEntry findspecies("Nebuchadnezzar", t)
