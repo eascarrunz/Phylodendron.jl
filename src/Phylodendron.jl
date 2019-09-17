@@ -31,9 +31,8 @@ export
 
 include("Bipartition.jl")
 export
-    Bipartition, UndirectedBipartition, DirectedBipartition,
-    string, show
- 
+    Bipartition
+
 include("SpeciesData.jl")
 export
     SpeciesDataMatrix,
@@ -87,6 +86,15 @@ include("Tree.jl")
         create_species!,
         map_species!,
         map_data!
+
+include("bipartition_methods.jl")
+    export
+        update_bipartition!,
+        compute_bipartitions!,
+        istrivial, 
+        isinformative,
+        are_compatible,
+        are_conflicting
 
 #=
 #### TREE INSPECTION AND MANIPULATION ####

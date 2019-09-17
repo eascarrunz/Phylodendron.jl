@@ -1,4 +1,4 @@
-function update_bipartition!(p::Node, q::Node, n::Int; directed=isdirected(p))
+function update_bipartition!(p::Node, q::Node, n::Int)
 	br = getbranch(p, q)
 	v = zeros(n)
 	if hasspecies(p)
@@ -8,10 +8,12 @@ function update_bipartition!(p::Node, q::Node, n::Int; directed=isdirected(p))
 		r == q && continue
 		v .|= getbranch(p, r).bipart.v
 	end
-	br.bipart = rooted ? DirectedBipartition(v) : UndirectedBipartition(v)
+	br.bipart = Bipartition(v)
+
+	return nothing
 end
 
-function compute_bipartitions!(t::Tree; directed=t.rooted)
+function compute_bipartitions!(t::Tree)
 	trav = PostorderTraverser(t)
 	n = length(t.dir)
 	bplist = Deque{Bipartition}()
@@ -29,7 +31,7 @@ function compute_bipartitions!(t::Tree; directed=t.rooted)
 				v .|= getbranch(p, r).bipart.v
 			end
 		end
-		br.bipart = directed ? DirectedBipartition(v) : UndirectedBipartition(v)
+		br.bipart = Bipartition(v)
 		push!(bplist, br.bipart)
 	end
 	t.bipartitions = Set(collect(bplist))
@@ -42,7 +44,11 @@ end
 
 A bipartition is trivial if it separates just one species (or none) from the rest.
 """
-istrivial(bp::Bipartition)::Bool = sum(bp.v) > 1
+function istrivial(bp::Bipartition)::Bool
+	i = length(bp.v)
+	s = sum(bp.v)
+	return (s == i - 1 || s == 1)
+end
 
 """
 	isinformative(bp::Bipartition)
@@ -61,19 +67,15 @@ Return true if bipartitions `bp1` and `bp2` can be present in the same tree.
 Compatibility between bipartitions depends on whether they are directed: if an undirected bipartition is compatible with a directed bipartition, it is also compatible with the complement of that directed bipartition. A directed bipartition is never compatible with its complement. Undirected bipartitions have no complement.
 """
 function are_compatible(bp1::Bipartition, bp2::Bipartition)
-	v3 = bp1.v .| bp2.v
+	cv1 = .! bp1.v
+	cv2 = .! bp2.v
 
-	return (v3 == bp1.v || v3 == bp2.v)
+	(bp1.v == bp1.v .| bp2.v) && return true
+	(bp1.v == bp1.v .| cv2) && return true
+	(cv1 == cv1 .| bp2.v) && return true
+	(cv1 == cv1 .| cv2) && return true
+
+	return false
 end
-
-function are_compatible(bp1::DirectedBipartition, bp2::UndirectedBipartition)
-	v1 = bp1.v[1] ? .! bp1.v : bp1.v
-	v3 = v1 .| bp2.v
-
-	return (v3 == v1 || v3 == bp2.v)
-end
-
-are_compatible(bp1::UndirectedBipartition, bp2::DirectedBipartition) =
-	are_compatible(bp2, bp1)
 
 are_conflicting(bp1::Bipartition, bp2::Bipartition) = ! are_compatible(bp1, bp2)
