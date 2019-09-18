@@ -11,11 +11,11 @@ struct Bipartition
 	end
 end
 
-Base.print(bp::Bipartition) = print(mapreduce(x -> x ? "●" : "○", *, bp.v))
+Base.print(io::IO, bp::Bipartition) = print(io, mapreduce(x -> x ? "●" : "○", *, bp.v))
 
 function Base.show(io::IO, bp::Bipartition)
 	summary(io, bp)
-	println("  ", string(bp))
+	print("  ", string(bp))
 
 	return nothing
 end
