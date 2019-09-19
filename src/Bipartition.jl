@@ -15,7 +15,7 @@ Base.print(io::IO, bp::Bipartition) = print(io, mapreduce(x -> x ? "●" : "○"
 
 function Base.show(io::IO, bp::Bipartition)
 	summary(io, bp)
-	print("  ", string(bp))
+	print(io, "  ", string(bp))
 
 	return nothing
 end
