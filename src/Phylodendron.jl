@@ -140,6 +140,10 @@ include("bipartition_methods.jl")
         istrivial, isinformative,
         are_compatible, are_conflicting
 
+include("clone.jl")
+export
+    clone
+
 include("model_methods.jl")
 export patch_models
 
