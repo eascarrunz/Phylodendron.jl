@@ -123,7 +123,7 @@ Compute the restricted log-likelihood from the parameters of a pruned node with 
 """
 function sitewise_llh_brownian_3c(
     x₁::Vector{Float64}, x₂::Vector{Float64}, x₃::Vector{Float64}, # Pruned character values
-    v₁::Float64, v₂::Float64, v₃::Float64, # Pruned branch lengths
+    v₁::Vector{Float64}, v₂::Vector{Float64}, v₃::Vector{Float64}, # Pruned branch lengths
     k::Int                                 # Number of characters
     )::Vector{Float64}
     # Following Felsenstein (1981, Eqn. A1-1)
@@ -211,41 +211,35 @@ function optimise_sitewise_brownian_v_3c!(p::Node, i::Int)
     kv̂₁ = @. (x₁ - x₂) * (x₁ - x₃)
     kv̂₂ = @. (x₂ - x₁) * (x₂ - x₃)
 
-    inds_negkv̂₁ = findall(x → x < 0.0, kv̂₁)
-    inds_negkv̂₂ = findall(x → x < 0.0, kv̂₂)
-    inds_negkv̂₃ = findall(x → x < 0.0, kv̂₃)
-    println(inds_negkv̂₁)
-    println(inds_negkv̂₂)
-    println(inds_negkv̂₃)
+    inds_negkv̂₁ = findall(x -> x < 0.0, kv̂₁)
+    inds_negkv̂₂ = findall(x -> x < 0.0, kv̂₂)
+    inds_negkv̂₃ = findall(x -> x < 0.0, kv̂₃)
 
     # if kv̂₁ < 0.0
-        @. kv̂₁[inds_negkv̂₁] = 0.0
-        @. kv̂₂[inds_negkv̂₁] = (x₁ - x₂)^2
-        @. kv̂₃[inds_negkv̂₁] = (x₁ - x₃)^2
+        kv̂₁[inds_negkv̂₁] .= 0.0
+        kv̂₂[inds_negkv̂₁] = @. (x₁[inds_negkv̂₁] - x₂[inds_negkv̂₁])^2
+        kv̂₃[inds_negkv̂₁] = @. (x₁[inds_negkv̂₁] - x₃[inds_negkv̂₁])^2
     # elseif kv̂₂ < 0.0
-        @. kv̂₁[inds_negkv̂₂] = (x₂ - x₁)^2
-        @. kv̂₂[inds_negkv̂₂] = 0.0
-        @. kv̂₃[inds_negkv̂₂] = (x₂ - x₃)^2
+        kv̂₁[inds_negkv̂₂] = @. (x₂[inds_negkv̂₂] - x₁[inds_negkv̂₂])^2
+        kv̂₂[inds_negkv̂₂] .= 0.0
+        kv̂₃[inds_negkv̂₂] = @. (x₂[inds_negkv̂₂] - x₃[inds_negkv̂₂])^2
     # elseif kv̂₃ < 0.0
-        @. kv̂₁[inds_negkv̂₃] = (x₃ - x₁)^2
-        @. kv̂₂[inds_negkv̂₃] = (x₃ - x₂)^2
-        @. kv̂₃[inds_negkv̂₃] = 0.0
+        kv̂₁[inds_negkv̂₃] = @. (x₃[inds_negkv̂₃] - x₁[inds_negkv̂₃])^2
+        kv̂₂[inds_negkv̂₃] = @. (x₃[inds_negkv̂₃] - x₂[inds_negkv̂₃])^2
+        kv̂₃[inds_negkv̂₃] .= 0.0
     # end
 
-    @. br₁.models[i].vprune = kv̂₁ / k
-    @. br₂.models[i].vprune = kv̂₂ / k
-    @. br₃.models[i].vprune = kv̂₃ / k
+    br₁.models[i].vprune = @. kv̂₁ / k
+    br₂.models[i].vprune = @. kv̂₂ / k
+    br₃.models[i].vprune = @. kv̂₃ / k
+  
+    map!((x, y) -> x > y ? x : y, br₁.models[i].vprune, br₁.models[i].vprune, br₁.models[i].δv)
+    map!((x, y) -> x > y ? x : y, br₂.models[i].vprune, br₂.models[i].vprune, br₂.models[i].δv)
+    map!((x, y) -> x > y ? x : y, br₃.models[i].vprune, br₃.models[i].vprune, br₃.models[i].δv)
 
-    @. br₁.models[i].vprune = br₁.models[i].vprune > br₁.models[i].δv ? 
-        br₁.models[i].vprune : br₁.models[i].δv
-    @. br₂.models[i].vprune = br₂.models[i].vprune > br₂.models[i].δv ? 
-        br₂.models[i].vprune : br₂.models[i].δv
-    @. br₃.models[i].vprune = br₃.models[i].vprune > br₃.models[i].δv ? 
-        br₃.models[i].vprune : br₃.models[i].δv
-
-    @. br₁.models[i].v = br₁.models[i].vprune - br₁.models[i].δv
-    @. br₂.models[i].v = br₂.models[i].vprune - br₂.models[i].δv
-    @. br₃.models[i].v = br₃.models[i].vprune - br₃.models[i].δv
+    br₁.models[i].v = @. br₁.models[i].vprune - br₁.models[i].δv
+    br₂.models[i].v = @. br₂.models[i].vprune - br₂.models[i].δv
+    br₃.models[i].v = @. br₃.models[i].vprune - br₃.models[i].δv
     
     return nothing
 end
@@ -262,7 +256,7 @@ function optimise_sitewise_v!(t::Tree, i::Int; niter = 5)
             old_p = next!(trav)
         end    
         sitewise_rel_brownian_prune!(old_p, i)
-        optimise_sitewise_brownian_v_3c!!(old_p, i)
+        optimise_sitewise_brownian_v_3c!(old_p, i)
         @inbounds while ! isfinished(trav)
             p = next!(trav)
             istip(p) && continue
