@@ -175,4 +175,12 @@ export
     calc_llh!,
     phylip_llh
 
-end
+include("brownian/swreml.jl")
+export
+    add_sitewise_rel_brownian_model!,
+    optimise_sitewise_v!,
+    sitewise_rel_brownian_prune!,
+    calc_sitewise_llh!,
+    phylip_sitewise_llh
+
+end # module Phylodendron

@@ -144,7 +144,7 @@ function rel_brownian_prune!(p::Node, i::Int, calc_llh::Bool=false)::Nothing
     llh = calc_llh ? 0.0 : NaN
 
     trav = PostorderTraverser(p)
-    while ! isfinished(trav)    # Prune the origin outside this loop
+    @inbounds while ! isfinished(trav)    # Prune the origin outside this loop
         q, r = nextpair!(trav)
         q == p && break
         rel_brownian_prune!(q, r, i, calc_llh)
@@ -250,7 +250,7 @@ Optimise v in a tree
 """
 function optimise_v!(t::Tree, i::Int; niter = 5)
     @assert t.models[i] isa RELBrownianTree
-    for _ in 1:niter
+    @inbounds for _ in 1:niter
         trav = PreorderTraverser(t)
         old_p = next!(trav)
         while istip(old_p)
@@ -258,7 +258,7 @@ function optimise_v!(t::Tree, i::Int; niter = 5)
         end    
         rel_brownian_prune!(old_p, i)
         optimise_brownian_v_3c!(old_p, i)
-        while ! isfinished(trav)
+        @inbounds while ! isfinished(trav)
             p = next!(trav)
             istip(p) && continue
             #=
