@@ -64,13 +64,13 @@ Advance the preorder tree traverser `x` and return a tuple with the next node an
 
     if ! x.directed
         p, parent_p = pop!(x.stack)
-        for link in p.links[end:-1:1]
+        @inbounds for link in p.links[end:-1:1]
             link.node ≠ parent_p && push!(x.stack, (link.node, p))
         end
     else
         p, parent_p = pop!(x.stack)
         children_p = children(p)[end:-1:1]
-        for q in children_p
+        @inbounds for q in children_p
             push!(x.stack, (q, p))
         end
     end
