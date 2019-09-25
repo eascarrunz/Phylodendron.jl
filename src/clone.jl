@@ -2,7 +2,9 @@ function _clone(br::Branch)
 	cbr = Branch()
 	cbr.length = br.length
 	cbr.label = br.label
-	cbr.bipart = br.bipart
+	if isdefined(br, :bipart)
+		cbr.bipart = br.bipart
+	end
 
 	return cbr
 end
@@ -51,7 +53,9 @@ function clone(t::Tree)
 	ct.label = t.label
 	ct.dir = t.dir
 	ct.autoupdate = t.autoupdate
-	ct.bipartitions = t.bipartitions
+	if isdefined(t, :bipartitions)
+		ct.bipartitions = t.bipartitions
+	end
 	update!(ct)
 
 	return ct
