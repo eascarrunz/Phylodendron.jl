@@ -87,15 +87,6 @@ include("Tree.jl")
         map_species!,
         map_data!
 
-include("bipartition_methods.jl")
-    export
-        update_bipartition!,
-        compute_bipartitions!,
-        istrivial, 
-        isinformative,
-        are_compatible,
-        are_conflicting
-
 #=
 #### TREE INSPECTION AND MANIPULATION ####
 These files define various functions for getting and setting properties of tree components, and altering the topology of the tree.
@@ -135,10 +126,13 @@ include("find.jl")
     export findspecies
 
 include("bipartition_methods.jl")
-    export
-        compute_bipartitions!,
-        istrivial, isinformative,
-        are_compatible, are_conflicting
+export
+    update_bipartition!,
+    compute_bipartitions!,
+    istrivial, 
+    isinformative,
+    are_compatible,
+    are_conflicting
 
 include("clone.jl")
 export
