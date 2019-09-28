@@ -16,13 +16,13 @@ mutable struct RELBrownianTree <: TreeModelPlugin
     partnumber::Int
     n_chars::Int
     weight::Int
-    llh::Float64
+    llh::Vector{Float64}
 end
 
 mutable struct RELBrownianNode <: NodeModelPlugin
     treemodel::RELBrownianTree
     xprune::Vector{Float64}
-    llh::Float64
+    llh::Vector{Float64}
 end
 
 mutable struct RELBrownianBranch <: BranchModelPlugin
@@ -36,7 +36,7 @@ end
 Add a restricted likelihood Brownian motion model to the tree, link it to partition `i`, and initialise all its node and branch values, if it has them. Returns the index of model in the tree's model vector.
 """
 function add_rel_brownian_model!(t::Tree, i::Int = 1, n_chars::Int = 1; usebrlength::Bool=true)
-    m = RELBrownianTree(i, n_chars, 1, NaN)
+    m = RELBrownianTree(i, n_chars, 1, fill(NaN, n_chars))
     push!(t.models, m)
     trav = PreorderTraverser(t.origin, false)
     while ! isfinished(trav)
@@ -90,7 +90,7 @@ function rel_brownian_prune!(p::Node, q::Node, i::Int, calc_llh::Bool=false)::No
     Σv = v₁ + v₂
 
     # Following Felsenstein (1981), Eqn. 12:
-    p.models[i].xprune .= (x₁ * v₂ .+ x₂ * v₁) / Σv
+    p.models[i].xprune = @. (x₁ * v₂ + x₂ * v₁) / Σv
 
     # Following Felsenstein (1981), Eqn. 13:
     brₚ.models[i].δv = v₁ * v₂ / Σv
@@ -113,7 +113,7 @@ function llh_brownian_2c(
     k::Int                    # Number of characters
     )::Float64
     # Following Felsenstein (1981), Eqn. 9:
-    return -0.5 * (k * (log(v₁ + v₂) + LOG2π) + sum((x₁.- x₂).^2) / (v₁ + v₂))
+    return @. -0.5 * ((log(v₁ + v₂) + LOG2π) + ((x₁ - x₂)^2) / (v₁ + v₂))
     # return -0.5 * (k * log(Σv) + sum((x₁.- x₂).^2) / Σv)
 end
 
@@ -127,21 +127,24 @@ function llh_brownian_3c(
     )::Float64
     # Following Felsenstein (1981, Eqn. A1-1)
     Σv₁₂ = v₁ + v₂
-    llh = k * log(Σv₁₂)
-    llh += sum((x₁.- x₂).^2) / Σv₁₂
-    llh += k * log(v₃ + v₁ * v₂ / Σv₁₂)
+    llh = fill(log(Σv₁₂), k)
+    @. llh += ((x₁ - x₂)^2) / Σv₁₂
+    @. llh += log(v₃ + v₁ * v₂ / Σv₁₂)
 
-    part1 = (x₃ .- (v₂ .* x₁ + v₁ * x₂) ./ Σv₁₂)
-    part2 = v₃ + v₁ * v₂ / Σv₁₂
-    llh += sum(part1.^2) / part2
-    llh *= -0.5
-    llh -= k * LOG2π
+    part1 = @. (x₃ - (v₂ * x₁ + v₁ * x₂) / Σv₁₂)
+    part2 = @. v₃ + v₁ * v₂ / Σv₁₂
+    @. llh += (part1.^2) / part2
+    @. llh *= -0.5
+    @. llh -= LOG2π
 
     return llh
 end 
 
 function rel_brownian_prune!(p::Node, i::Int, calc_llh::Bool=false)::Nothing
-    llh = calc_llh ? 0.0 : NaN
+    if calc_llh
+        k = p.models[i].treemodel.n_chars
+        llh = zeros(k)
+    end
 
     trav = PostorderTraverser(p)
     @inbounds while ! isfinished(trav)    # Prune the origin outside this loop
@@ -149,7 +152,9 @@ function rel_brownian_prune!(p::Node, i::Int, calc_llh::Bool=false)::Nothing
         q == p && break
         rel_brownian_prune!(q, r, i, calc_llh)
         istip(q) && continue
-        llh += calc_llh ? q.models[i].llh : 0.0
+        if calc_llh
+            llh .+= q.models[i].llh
+        end
     end
 
     if calc_llh
@@ -166,12 +171,11 @@ function rel_brownian_prune!(p::Node, i::Int, calc_llh::Bool=false)::Nothing
             x₂= child₂.models[i].xprune
             v₂ = br₂.models[i].vprune
             x₃= child₃.models[i].xprune
-            v₃ = br₃.models[i].vprune
-
-            k = p.models[i].treemodel.n_chars 
+            v₃ = br₃.models[i].vprune 
             
-            p.models[i].llh = llh_brownian_3c(x₁, x₂, x₃, v₁, v₂, v₃, k)
-            p.models[i].treemodel.llh = llh + p.models[i].llh
+            p.models[i].llh .= llh_brownian_3c(x₁, x₂, x₃, v₁, v₂, v₃, k)
+            p.models[i].treemodel.llh .= llh .+ p.models[i].llh
+
         elseif length(childrenₚ) == 2
             child₁, child₂ = childrenₚ
 
@@ -182,11 +186,9 @@ function rel_brownian_prune!(p::Node, i::Int, calc_llh::Bool=false)::Nothing
             v₁ = br₁.models[i].vprune
             x₂= child₂.models[i].xprune
             v₂ = br₂.models[i].vprune
-
-            k = p.models[i].treemodel.n_chars 
             
-            p.models[i].llh = llh_brownian_2c(x₁, x₂, v₁, v₂, k)
-            p.models[i].treemodel.llh = llh + p.models[i].llh
+            p.models[i].llh .= llh_brownian_2c(x₁, x₂, v₁, v₂, k)
+            p.models[i].treemodel.llh .= llh .+ p.models[i].llh
         end
     end
 
@@ -293,7 +295,7 @@ This assumes that the tree has already been pruned.
 function calc_llh!(t::Tree, i::Int)::Float64
     @assert t.models[i] isa RELBrownianTree
     rel_brownian_prune!(t.origin, i, true)
-    return t.models[i].llh
+    return sum(t.models[i].llh)
 end
 
 
@@ -305,6 +307,6 @@ Return the log-likelihood of the model `m` as computed by Phylip.
 Phylip computes log-likelihoods of trees differently because it ommits a constant term from the likelihoods of every node. The term is (n - 1)/2 * k * ln(2π), where k is the number of characters and n the number of tips.
 """
 phylip_llh(t::Tree, model::RELBrownianTree)::Float64 =
-    model.llh + (t.n_tips - 1) / 2 * model.n_chars * LOG2π
+    sum(model.llh) + (t.n_tips - 1) / 2 * model.n_chars * LOG2π
 
 
