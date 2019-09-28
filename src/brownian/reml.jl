@@ -53,7 +53,7 @@ Initialise the parameters of the restricted likelihood Brownian model `m` for no
 """
 function init_model!(p::Node, m::RELBrownianTree)
     xprune = hasdata(p) ? p.dataviews[m.partnumber] : fill(NaN, m.n_chars)
-    node_plug = RELBrownianNode(m, xprune, NaN)
+    node_plug = RELBrownianNode(m, xprune, fill(NaN, m.n_chars))
     push!(p.models, node_plug) 
 
     return nothing
