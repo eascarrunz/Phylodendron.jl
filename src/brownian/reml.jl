@@ -53,7 +53,7 @@ Initialise the parameters of the restricted likelihood Brownian model `m` for no
 """
 function init_model!(p::Node, m::RELBrownianTree)
     xprune = hasdata(p) ? p.dataviews[m.partnumber] : fill(NaN, m.n_chars)
-    node_plug = RELBrownianNode(m, xprune, NaN)
+    node_plug = RELBrownianNode(m, xprune, fill(NaN, m.n_chars))
     push!(p.models, node_plug) 
 
     return nothing
@@ -111,7 +111,7 @@ function llh_brownian_2c(
     x₁::Vector{Float64}, x₂::Vector{Float64}, # Pruned character values
     v₁::Float64, v₂::Float64, # Pruned branch lengths
     k::Int                    # Number of characters
-    )::Float64
+    )::Vector{Float64}
     # Following Felsenstein (1981), Eqn. 9:
     return @. -0.5 * ((log(v₁ + v₂) + LOG2π) + ((x₁ - x₂)^2) / (v₁ + v₂))
     # return -0.5 * (k * log(Σv) + sum((x₁.- x₂).^2) / Σv)
@@ -124,7 +124,7 @@ function llh_brownian_3c(
     x₁::Vector{Float64}, x₂::Vector{Float64}, x₃::Vector{Float64}, # Pruned character values
     v₁::Float64, v₂::Float64, v₃::Float64, # Pruned branch lengths
     k::Int                                 # Number of characters
-    )::Float64
+    )::Vector{Float64}
     # Following Felsenstein (1981, Eqn. A1-1)
     Σv₁₂ = v₁ + v₂
     llh = fill(log(Σv₁₂), k)
