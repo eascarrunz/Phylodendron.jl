@@ -139,7 +139,7 @@ export
     clone
 
 include("model_methods.jl")
-export patch_models
+export patch_models!
 
 #=
 #### TREE I/O ####

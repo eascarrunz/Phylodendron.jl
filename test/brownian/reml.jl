@@ -22,7 +22,7 @@ The log-likelihoods were computed with CONTML v.3.697
 
         @test ≈(phylip_llh(t, t.models[1]), ref_llh_fixedv, rtol=1e-5)
         collapse_nonsplitting!(t, skiporigin=false)
-        patch_models(t.origin)
+        patch_models!(t.origin)
         @test calc_llh!(t, 1) ≈ llh_fixedv
 
         add_rel_brownian_model!(t, 1, k; usebrlength=false)

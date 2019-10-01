@@ -5,7 +5,7 @@ Inspect the neighbours and branches of node `p` and initialise in them the same 
 
 Useful after topological manipulations that created new nodes or branches in the tree. Neighbours and branches can be skipped if unnecessary. `nodeargs` and `brargs` are optional named tuples that are passed on as keyword arguments to the model plugin initialisers of nodes and branches, respectively.
 """
-function patch_models(
+function patch_models!(
     p::Node; 
     skipbranches::Bool=false, 
     skipneighbours::Bool=false, 
