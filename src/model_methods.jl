@@ -15,11 +15,11 @@ function patch_models!(
     for q in neighbours(p)
         for m in p.models
             if ! skipneighbours
-                length(q.models) > 0 || init_model!(q, m.treemodel, nodeargs...)
+                length(q.models) > 0 || init_model!(q, m.treemodel; nodeargs...)
             end
             if ! skipbranches
                 br = getbranch(p, q)
-                length(br.models) > 0 || init_model!(br, m.treemodel, brargs...)
+                length(br.models) > 0 || init_model!(br, m.treemodel; brargs...)
             end
         end
     end
